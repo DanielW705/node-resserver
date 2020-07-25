@@ -4,6 +4,7 @@
   "description": "Primer node que se parece a mis proyectos de visualstudio",
   "main": "index.js",
   "scripts": {
+    "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Daniel Gonzalez Martinez",
