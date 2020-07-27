@@ -1,5 +1,6 @@
 require("./config/config");
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
 const bodyParser = require("body-parser");
 // parse application/x-www-form-urlencoded
@@ -32,6 +33,17 @@ app.put("/usuario/:id", (req, res) => {
 app.delete("/usuario", (req, res) => {
   res.json("Delete usuario");
 });
-app.listen(process.env.PORT, () => {
-  console.log(`Servidor realizado en el puerto ${process.env.PORT}`);
+mongoose.connect(
+  "mongodb://localhost:27017/prueba",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  (err, res) => {
+    if (err) throw err;
+    console.log("Base de datos ONLINE");
+  }
+);
+app.listen(8080, () => {
+  console.log(`Servidor realizado en el puerto 8080`);
 });
