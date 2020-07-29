@@ -8,18 +8,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
-app.use(require('./routes/usuario'))
+app.use(require("./routes/usuario"));
 mongoose.connect(
-  "mongodb://localhost:27017/prueba",
+  process.env.urlDB,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   },
   (err, res) => {
     if (err) throw err;
     console.log("Base de datos ONLINE");
   }
 );
-app.listen(8080, () => {
-  console.log(`Servidor realizado en el puerto 8080`);
+app.listen(process.env.PORT, () => {
+  console.log(`Servidor realizado en el puerto ${process.env.PORT}`);
 });
