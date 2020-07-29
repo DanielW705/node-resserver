@@ -10,5 +10,3 @@ if (process.env.NODE_ENV === "dev") {
   urlDB = process.env.MONGO_URI;
 }
 process.env.urlDB = urlDB;
-//mongodb+srv://daniel:O0Nk2SXOaJ0gcJvv@cluster0.5hrqi.mongodb.net/cafe?retryWrites=true&w=majority
-//"mongodb://localhost:27017/prueba"
