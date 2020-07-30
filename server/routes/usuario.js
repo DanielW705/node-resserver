@@ -1,10 +1,13 @@
 const express = require("express");
+const app = express();
 const Usuario = require("../models/usuario");
 const bcrypt = require("bcrypt");
 const _ = require("underscore");
-const { isNull } = require("underscore");
-const app = express();
-app.get("/usuario", (req, res) => {
+const {
+  verificarToken,
+  verificarRol,
+} = require("../middlewares/autenticacion");
+app.get("/usuario", verificarToken, (req, res) => {
   let desde = Number(req.query.desde) || 0;
   let limite = Number(req.query.limite) || 0;
   Usuario.find({ estado: true }, "nombre email role estado google img")
@@ -15,7 +18,7 @@ app.get("/usuario", (req, res) => {
         return res.status(400).json({
           ok: false,
           err,
-          sended: body,
+          send: body,
         });
       }
       Usuario.count({ estado: true }, (err, conteo) => {
@@ -27,7 +30,7 @@ app.get("/usuario", (req, res) => {
       });
     });
 });
-app.post("/usuario", (req, res) => {
+app.post("/usuario", [verificarToken, verificarRol], (req, res) => {
   let body = req.body;
   let usuario = new Usuario({
     nombre: body.nombre,
@@ -40,7 +43,7 @@ app.post("/usuario", (req, res) => {
       return res.status(400).json({
         ok: false,
         err,
-        sended: body,
+        send: body,
       });
     }
     res.json({
@@ -49,7 +52,7 @@ app.post("/usuario", (req, res) => {
     });
   });
 });
-app.put("/usuario/:id", (req, res) => {
+app.put("/usuario/:id", [verificarToken, verificarRol], (req, res) => {
   let id = req.params.id;
   let body = _.pick(req.body, ["nombre", "email", "img", "role", "estado"]);
   Usuario.findByIdAndUpdate(
@@ -66,7 +69,7 @@ app.put("/usuario/:id", (req, res) => {
         return res.status(400).json({
           ok: false,
           err,
-          sended: body,
+          send: body,
         });
       }
       res.json({
@@ -76,7 +79,7 @@ app.put("/usuario/:id", (req, res) => {
     }
   );
 });
-app.delete("/usuario/:id", (req, res) => {
+app.delete("/usuario/:id", [verificarToken, verificarRol], (req, res) => {
   let id = req.params.id;
   Usuario.findOneAndUpdate(
     id,
