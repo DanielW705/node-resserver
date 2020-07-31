@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prueba google</title>
+    <meta
+      name="google-signin-client_id"
+      content="89111469790-43uepajq1me1dg92fkt8icjbfr4rha8f.apps.googleusercontent.com"
+    />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </head>
+  <body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <a href="#" onclick="signOut()">Sign out</a>
+    <script>
+      const signOut = () => {
+        let auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log("User signed out.");
+        });
+      };
+      // function signOut() {
+      //   let auth2 = gapi.auth2.getAuthInstance();
+      //   auth2.signOut().then(function () {
+      //     console.log("User signed out.");
+      //   });
+      // }
+    </script>
+    <script>
+      function onSignIn(googleUser) {
+        let profile = googleUser.getBasicProfile();
+        let id_token = googleUser.getAuthResponse().id_token;
+        fetch("/google", {
+          method: "POST",
+          // La mejor manera para fetch sirva con form urlencode
+          body: new URLSearchParams({
+            idtoken: id_token,
+          }),
+          headers: {
+            "content-type": "application/x-www-form-urlencoded", //Para usarlo con JSON: "application/json"
+          },
+        })
+          .then(async (succ) => {
+            console.log(await succ.json());
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
+    //
+  </body>
+</html>
