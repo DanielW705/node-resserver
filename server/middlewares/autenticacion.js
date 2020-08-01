@@ -33,7 +33,23 @@ const verificarRol = (req, res, next) => {
     });
   }
 };
+let verificaTokenImg = (req, res, next) => {
+  let token = req.query.token;
+  jwt.verify(token, process.env.SEED, (err, decode) => {
+    if (err) {
+      return res.status(401).json({
+        ok: false,
+        error: {
+          message: "Ese token no es valido",
+        },
+      });
+    }
+    req.usuario = decode.usuario;
+    next();
+  });
+};
 module.exports = {
   verificarToken,
   verificarRol,
+  verificaTokenImg,
 };
